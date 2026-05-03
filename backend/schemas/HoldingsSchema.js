@@ -8,6 +8,7 @@ const HoldingsSchema = new Schema({
     net: String,
     day: String,
     isLoss: { type: Boolean, default: false },
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 module.exports = {HoldingsSchema}

@@ -6,6 +6,7 @@ const OrdersSchema = new Schema ({
     price: Number,
     mode: String,
     date: { type: Date, default: Date.now },
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 module.exports = {OrdersSchema};

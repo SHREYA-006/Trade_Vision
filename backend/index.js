@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 //const bodyParser = require("body-parser");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 const AuthRoute = require("./routes/AuthRoute");
 const cookieParser = require("cookie-parser");
@@ -18,9 +19,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:3001"],
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json()); // no need for bodyParser
@@ -199,46 +200,58 @@ app.use("/auth", AuthRoute);
 
 app.get("/allHoldings", async (req, res) => {
   try {
-    let allHoldings = await HoldingsModel.find({});
+    const token = req.cookies.token;
+    //console.log("TOKEN:", token); // ← add this
+    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+    let allHoldings = await HoldingsModel.find({ userId: decoded.id });
     res.json(allHoldings);
   } catch (err) {
+    console.error("allHoldings error:", err.message); // ← add this
     res.status(500).json({ message: "Error fetching holdings" });
   }
 });
 
 app.get("/allPositions", async (req, res) => {
-  try{
-    let allPositions = await PositionsModel.find({});
+  try {
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+    let allPositions = await PositionsModel.find({ userId: decoded.id });
     res.json(allPositions);
-  } catch (err){
+  } catch (err) {
     res.status(500).json({ message: "Error fetching positions" });
   }
 });
 
-app.get("/allOrders",async(req,res)=>{
-    try{
-      let allOrders = await OrdersModel.find({});
-      res.json(allOrders);
-    }catch (err){
-      res.status(500).json({ message: "Error fetching holdings" });
-    }
+app.get("/allOrders", async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+    let allOrders = await OrdersModel.find({ userId: decoded.id });
+    res.json(allOrders);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching holdings" });
+  }
 });
 
 // index.js - add this route
 app.get("/summary", async (req, res) => {
-
-  const holdings = await HoldingsModel.find({});
+  const token = req.cookies.token;
+  const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+  const holdings = await HoldingsModel.find({ userId: decoded.id });
 
   const totalInvestment = holdings.reduce(
-    (sum, stock) => sum + stock.avg * stock.qty, 0
+    (sum, stock) => sum + stock.avg * stock.qty,
+    0,
   );
   const totalCurrentValue = holdings.reduce(
-    (sum, stock) => sum + stock.price * stock.qty, 0
+    (sum, stock) => sum + stock.price * stock.qty,
+    0,
   );
   const totalPnL = totalCurrentValue - totalInvestment;
-  const totalPnLPercent = totalInvestment > 0
-    ? ((totalPnL / totalInvestment) * 100).toFixed(2)
-    : "0.00";
+  const totalPnLPercent =
+    totalInvestment > 0
+      ? ((totalPnL / totalInvestment) * 100).toFixed(2)
+      : "0.00";
 
   res.json({
     holdingsCount: holdings.length,
@@ -251,15 +264,18 @@ app.get("/summary", async (req, res) => {
 
 app.post("/newOrder", async (req, res) => {
   const { name, qty, price, mode } = req.body;
-
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+  const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+  const userId = decoded.id;
   try {
     // 1. Always save to Orders
-    let newOrder = new OrdersModel({ name, qty, price, mode });
+    let newOrder = new OrdersModel({ name, qty, price, mode, userId});
     await newOrder.save();
 
     if (mode === "BUY") {
       // Check if holding already exists
-      const existingHolding = await HoldingsModel.findOne({ name });
+      const existingHolding = await HoldingsModel.findOne({ name, userId});
 
       if (existingHolding) {
         // Update avg price using weighted average formula
@@ -281,13 +297,14 @@ app.post("/newOrder", async (req, res) => {
           price,
           net: "0.00%",
           day: "0.00%",
+          userId ,
         });
         await newHolding.save();
       }
     }
 
     if (mode === "SELL") {
-      const existingHolding = await HoldingsModel.findOne({ name });
+      const existingHolding = await HoldingsModel.findOne({ name ,userId});
 
       if (!existingHolding) {
         return res.status(400).json({ message: "Stock not in holdings" });
@@ -302,15 +319,15 @@ app.post("/newOrder", async (req, res) => {
       const pnlPercent = (((price - buyAvg) / buyAvg) * 100).toFixed(2);
 
       // Update or remove holding
-      if (existingHolding.qty === qty) {
-        await HoldingsModel.deleteOne({ name });
+      if (existingHolding.qty === Number(qty)) {
+        await HoldingsModel.deleteOne({ name, userId});
       } else {
         existingHolding.qty -= qty;
         await existingHolding.save();
       }
 
       // Log to Positions
-      const existingPosition = await PositionsModel.findOne({ name });
+      const existingPosition = await PositionsModel.findOne({ name, userId});
 
       if (existingPosition) {
         existingPosition.qty += qty;
@@ -327,6 +344,7 @@ app.post("/newOrder", async (req, res) => {
           net: `${pnl >= 0 ? "+" : ""}${pnlPercent}%`,
           day: `${pnl >= 0 ? "+" : ""}${pnlPercent}%`,
           isLoss: pnl < 0,
+          userId,
         });
         await newPosition.save();
       }
@@ -337,6 +355,15 @@ app.post("/newOrder", async (req, res) => {
     console.error(err);
     res.status(500).json({ message: "Server error", error: err });
   }
+});
+
+app.post("/auth/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: false,
+  });
+  res.json({ message: "Logged out successfully" });
 });
 
 mongoose
