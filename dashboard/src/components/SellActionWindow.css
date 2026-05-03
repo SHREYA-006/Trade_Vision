@@ -1,0 +1,90 @@
+#sell-window {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid #e53935;
+  border-radius: 4px;
+  background-color: #fff;
+  padding: 16px 20px;
+  width: 360px;
+  box-shadow: 0 6px 24px rgba(229, 57, 53, 0.15);
+  z-index: 999;
+}
+
+/* Top tab indicator — red for sell */
+#sell-window::before {
+  content: "SELL";
+  display: block;
+  background: #e53935;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  width: fit-content;
+  margin-bottom: 14px;
+}
+
+#sell-window .inputs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+#sell-window fieldset {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 10px 6px;
+  flex: 1;
+  transition: border-color 0.2s;
+}
+
+#sell-window fieldset:focus-within {
+  border-color: #e53935;
+}
+
+#sell-window legend {
+  font-size: 11px;
+  color: #999;
+  padding: 0 4px;
+}
+
+#sell-window input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #333;
+}
+
+#sell-window .buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#sell-window .buttons span {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Red sell button — override the blue from BuyActionWindow */
+.btn-red {
+  background-color: #e53935;
+  color: #fff;
+  padding: 6px 18px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 8px;
+  transition: background-color 0.2s;
+}
+
+.btn-red:hover {
+  background-color: #c62828;
+  color: #fff;
+}

@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Universe() {
+  const navigate = useNavigate();
   return (
     <div className="container p-5 ml-5 mr-5">
       <div className="row text-center">
@@ -16,14 +18,14 @@ function Universe() {
       </div>
       <div className="row text-center mt-5">
         <div className="col-4 p-3">
-          <img src="images/zerodhaFundhouse.png" style={{width:"50%"}}></img>
+          <img src="images/zerodhaFundhouse.png" style={{ width: "50%" }}></img>
           <p className="text-small text-muted p-4">
             Our asset management venture that is creating simple and transparent
             index funds to help you save for your goals.
           </p>
         </div>
         <div className="col-4 p-3">
-          <img src="images/sensibullLogo.svg" style={{width:"15em"}}></img>
+          <img src="images/sensibullLogo.svg" style={{ width: "15em" }}></img>
           <p className="text-small text-muted p-4">
             Options trading platform that lets you create strategies, analyze
             positions, and examine data points like open interest, FII/DII, and
@@ -31,7 +33,7 @@ function Universe() {
           </p>
         </div>
         <div className="col-4 p-3">
-          <img src="images/dittoLogo.png" style={{width:"30%"}}></img>
+          <img src="images/dittoLogo.png" style={{ width: "30%" }}></img>
           <p className="text-small text-muted p-4">
             Personalized advice on life and health insurance. No spam and no
             mis-selling. Sign up for free
@@ -40,7 +42,7 @@ function Universe() {
       </div>
       <div className="row text-center">
         <div className="col-4 p-3">
-          <img src="images/streakLogo.png" style={{width:"45%"}}></img>
+          <img src="images/streakLogo.png" style={{ width: "45%" }}></img>
           <p className="text-small text-muted p-4">
             Systematic trading platform that allows you to create and backtest
             strategies without coding.
@@ -59,7 +61,13 @@ function Universe() {
         </div>
       </div>
       <div className="row text-center">
-        <button className='btn btn-primary fs-5 ' style={{width:"17%" , margin:"0 auto"}}>Sign up for free</button>
+        <button
+          className="btn btn-primary fs-5 "
+          style={{ width: "17%", margin: "0 auto" }}
+          onClick={() => navigate("/signup")}
+        >
+          Sign up for free
+        </button>
       </div>
     </div>
   );

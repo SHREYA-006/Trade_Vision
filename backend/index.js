@@ -1,8 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+//const bodyParser = require("body-parser");
 const cors = require("cors");
+
+const AuthRoute = require("./routes/AuthRoute");
+const cookieParser = require("cookie-parser");
 
 const PORT = process.env.PORT || 3002;
 const URL = process.env.MONGO_URL;
@@ -13,8 +16,17 @@ const { OrdersModel } = require("./model/OrdersModel");
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.use(express.json()); // no need for bodyParser
+app.use(cookieParser());
+
+app.use("/auth", AuthRoute);
 
 // app.get("/addHoldings", async (req, res) => {
 //   let tempHoldings = [
@@ -186,33 +198,152 @@ app.use(bodyParser.json());
 // });
 
 app.get("/allHoldings", async (req, res) => {
-  let allHoldings = await HoldingsModel.find({});
-  res.json(allHoldings);
+  try {
+    let allHoldings = await HoldingsModel.find({});
+    res.json(allHoldings);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching holdings" });
+  }
 });
 
 app.get("/allPositions", async (req, res) => {
-  let allPositions = await PositionsModel.find({});
-  res.json(allPositions);
+  try{
+    let allPositions = await PositionsModel.find({});
+    res.json(allPositions);
+  } catch (err){
+    res.status(500).json({ message: "Error fetching positions" });
+  }
 });
 
-app.get("/newOrder",async(req,res)=>{
-    let allOrders = await OrdersModel.find({});
-    res.json(allOrders);
+app.get("/allOrders",async(req,res)=>{
+    try{
+      let allOrders = await OrdersModel.find({});
+      res.json(allOrders);
+    }catch (err){
+      res.status(500).json({ message: "Error fetching holdings" });
+    }
+});
+
+// index.js - add this route
+app.get("/summary", async (req, res) => {
+
+  const holdings = await HoldingsModel.find({});
+
+  const totalInvestment = holdings.reduce(
+    (sum, stock) => sum + stock.avg * stock.qty, 0
+  );
+  const totalCurrentValue = holdings.reduce(
+    (sum, stock) => sum + stock.price * stock.qty, 0
+  );
+  const totalPnL = totalCurrentValue - totalInvestment;
+  const totalPnLPercent = totalInvestment > 0
+    ? ((totalPnL / totalInvestment) * 100).toFixed(2)
+    : "0.00";
+
+  res.json({
+    holdingsCount: holdings.length,
+    totalInvestment: totalInvestment.toFixed(2),
+    totalCurrentValue: totalCurrentValue.toFixed(2),
+    totalPnL: totalPnL.toFixed(2),
+    totalPnLPercent,
+  });
 });
 
 app.post("/newOrder", async (req, res) => {
-  let newOrder = new OrdersModel({
-    name: req.body.name,
-    qty: req.body.qty,
-    price: req.body.price,
-    mode: req.body.mode
-  });
-  newOrder.save();
-  res.send("Order Saved");
+  const { name, qty, price, mode } = req.body;
+
+  try {
+    // 1. Always save to Orders
+    let newOrder = new OrdersModel({ name, qty, price, mode });
+    await newOrder.save();
+
+    if (mode === "BUY") {
+      // Check if holding already exists
+      const existingHolding = await HoldingsModel.findOne({ name });
+
+      if (existingHolding) {
+        // Update avg price using weighted average formula
+        // new avg = (old avg × old qty + new price × new qty) / (old qty + new qty)
+        const totalQty = existingHolding.qty + qty;
+        const newAvg =
+          (existingHolding.avg * existingHolding.qty + price * qty) / totalQty;
+
+        existingHolding.qty = totalQty;
+        existingHolding.avg = parseFloat(newAvg.toFixed(2));
+        existingHolding.price = price; // update LTP to latest buy price
+        await existingHolding.save();
+      } else {
+        // Create new holding
+        const newHolding = new HoldingsModel({
+          name,
+          qty,
+          avg: price,
+          price,
+          net: "0.00%",
+          day: "0.00%",
+        });
+        await newHolding.save();
+      }
+    }
+
+    if (mode === "SELL") {
+      const existingHolding = await HoldingsModel.findOne({ name });
+
+      if (!existingHolding) {
+        return res.status(400).json({ message: "Stock not in holdings" });
+      }
+      if (existingHolding.qty < qty) {
+        return res.status(400).json({ message: "Insufficient quantity" });
+      }
+
+      // Calculate P&L for this sell
+      const buyAvg = existingHolding.avg;
+      const pnl = (price - buyAvg) * qty;
+      const pnlPercent = (((price - buyAvg) / buyAvg) * 100).toFixed(2);
+
+      // Update or remove holding
+      if (existingHolding.qty === qty) {
+        await HoldingsModel.deleteOne({ name });
+      } else {
+        existingHolding.qty -= qty;
+        await existingHolding.save();
+      }
+
+      // Log to Positions
+      const existingPosition = await PositionsModel.findOne({ name });
+
+      if (existingPosition) {
+        existingPosition.qty += qty;
+        existingPosition.day = `${pnl >= 0 ? "+" : ""}${pnlPercent}%`;
+        existingPosition.isLoss = pnl < 0;
+        await existingPosition.save();
+      } else {
+        const newPosition = new PositionsModel({
+          product: "CNC",
+          name,
+          qty,
+          avg: buyAvg,
+          price,
+          net: `${pnl >= 0 ? "+" : ""}${pnlPercent}%`,
+          day: `${pnl >= 0 ? "+" : ""}${pnlPercent}%`,
+          isLoss: pnl < 0,
+        });
+        await newPosition.save();
+      }
+    }
+
+    res.send("Order saved");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err });
+  }
 });
 
+mongoose
+  .connect(URL)
+  .then(() => console.log("DB connected successfully"))
+  .catch((err) => console.log(err));
+
 app.listen(PORT, () => {
-  console.log("server listening on port 3002");
-  mongoose.connect(URL);
-  console.log("DB connected successfully");
+  console.log(`server listening on port ${PORT}`);
 });
