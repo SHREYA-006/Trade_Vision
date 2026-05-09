@@ -8,14 +8,32 @@ const SellActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
 
-  const handleSellClick = () => {
-    axios.post("http://localhost:3002/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "SELL",
-    });
-    GeneralContext.closeSellWindow();
+  const handleSellClick = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3002/newOrder",
+        {
+          name: uid,
+          qty: Number(stockQuantity), // ← convert string to number
+          price: Number(stockPrice), // ← convert string to number
+          mode: "SELL",
+        },
+        { withCredentials: true },
+      );
+
+      if (res.status === 400) {
+        alert(res.data.message); // ← show "Stock not in holdings"
+      }
+
+      alert("✅ Sell order placed successfully!"); // ← success message
+      window.dispatchEvent(new Event("orderPlaced")); // ← trigger refresh
+      
+      GeneralContext.closeSellWindow();
+    } catch (err) {
+      if (err.response) {
+        alert(err.response.data.message); // ← shows the actual error
+      }
+    }
   };
 
   const handleCancelClick = () => {

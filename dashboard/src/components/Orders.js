@@ -6,10 +6,18 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3002/allOrders").then((res) => {
-      console.log(res.data);
-      setOrders(res.data);
-    });
+    const fetchOrders = () => {
+      axios
+        .get("http://localhost:3002/allOrders", { withCredentials: true })
+        .then((res) => {
+          setOrders(res.data);
+        });
+    };
+
+    fetchOrders();
+
+    window.addEventListener("orderPlaced", fetchOrders);
+    return () => window.removeEventListener("orderPlaced", fetchOrders);
   }, []);
 
   return (

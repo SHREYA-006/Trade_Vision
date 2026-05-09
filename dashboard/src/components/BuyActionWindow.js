@@ -10,15 +10,29 @@ const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
 
-  const handleBuyClick=()=>{
-    axios.post("http://localhost:3002/newOrder",{
-        name: uid,
-        qty: stockQuantity,
-        price: stockPrice,
-        mode: "BUY"
-    })
-    GeneralContext.closeBuyWindow();
-  }
+  const handleBuyClick = async () => {
+    try {
+      await axios.post(
+        "http://localhost:3002/newOrder",
+        {
+          name: uid,
+          qty: Number(stockQuantity), // ← convert string to number
+          price: Number(stockPrice), // ← convert string to number
+          mode: "BUY",
+        },
+        { withCredentials: true },
+      );
+
+      alert("✅ Buy order placed successfully!"); // ← success message
+      window.dispatchEvent(new Event("orderPlaced")); // ← trigger refresh
+
+      GeneralContext.closeBuyWindow();
+    } catch (err) {
+      if (err.response) {
+        alert(err.response.data.message);
+      }
+    }
+  };
 
   const handleCancleClick = () => {
     GeneralContext.closeBuyWindow();
@@ -55,7 +69,9 @@ const BuyActionWindow = ({ uid }) => {
       <div className="buttons">
         <span>Margin required ₹140.65</span>
         <div>
-          <Link className="btn btn-blue" onClick={handleBuyClick}>Buy</Link>
+          <Link className="btn btn-blue" onClick={handleBuyClick}>
+            Buy
+          </Link>
           <Link to="" className="btn btn-grey" onClick={handleCancleClick}>
             Cancel
           </Link>

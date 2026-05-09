@@ -3,11 +3,33 @@ import axios from "axios";
 
 const Summary = () => {
   const [summary, setSummary] = useState(null);
+  const [user, setUser] = useState(null);
+
+  // replace your useEffect with this:
+  useEffect(() => {
+    const fetchSummary = () => {
+      axios
+        .get("http://localhost:3002/summary", { withCredentials: true })
+        .then((res) => {
+          setSummary(res.data);
+        });
+    };
+
+    fetchSummary(); // fetch on mount
+
+    window.addEventListener("orderPlaced", fetchSummary); // ← re-fetch on order
+    return () => window.removeEventListener("orderPlaced", fetchSummary); // cleanup
+  }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:3002/summary").then((res) => {
-      setSummary(res.data);
-    });
+    axios
+      .get("http://localhost:3002/auth/verify", { withCredentials: true })
+      .then((res) => {
+        if (res.data.status) {
+          setUser(res.data.user);
+        }
+      })
+      .catch(() => console.log("Auth check failed"));
   }, []);
 
   // Helper: converts raw number to "k" format — e.g. 31430 → "31.43k"
@@ -23,7 +45,7 @@ const Summary = () => {
   return (
     <>
       <div className="username">
-        <h6>Hi, User!</h6>
+        <h6>Hi, {user ? user.username : "User"}!</h6>
         <hr className="divider" />
       </div>
 
@@ -34,9 +56,7 @@ const Summary = () => {
 
         <div className="data">
           <div className="first">
-            <h3>
-              {summary ? formatK(summary.totalCurrentValue) : "—"}
-            </h3>
+            <h3>{summary ? formatK(summary.totalCurrentValue) : "—"}</h3>
             <p>Margin available</p>
           </div>
           <hr />
@@ -47,9 +67,7 @@ const Summary = () => {
             </p>
             <p>
               Opening balance{" "}
-              <span>
-                {summary ? formatK(summary.totalInvestment) : "—"}
-              </span>
+              <span>{summary ? formatK(summary.totalInvestment) : "—"}</span>
             </p>
           </div>
         </div>
@@ -78,15 +96,11 @@ const Summary = () => {
           <div className="second">
             <p>
               Current Value{" "}
-              <span>
-                {summary ? formatK(summary.totalCurrentValue) : "—"}
-              </span>
+              <span>{summary ? formatK(summary.totalCurrentValue) : "—"}</span>
             </p>
             <p>
               Investment{" "}
-              <span>
-                {summary ? formatK(summary.totalInvestment) : "—"}
-              </span>
+              <span>{summary ? formatK(summary.totalInvestment) : "—"}</span>
             </p>
           </div>
         </div>
