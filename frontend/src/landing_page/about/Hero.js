@@ -5,43 +5,48 @@ function Hero() {
     <div className="container mt-5 p-5">
       <div className="row p-5 border-bottom">
         <h1 className="text-center fs-4 mb-5">
-          We pioneered the discount broking model in India.<br></br>
-          Now, we are breaking ground with our technology.
+          I built a modern stock trading platform powered by technology.
+          <br></br>
         </h1>
       </div>
-      <div className="row  p-5 text-muted fs-6" style={{lineHeight:"1.8",fontSize:"1.2em"}}>
+      <div
+        className="row  p-5 text-muted fs-6"
+        style={{ lineHeight: "1.8", fontSize: "1.2em" }}
+      >
         <div className="col p-5 fs-10">
           <p>
-            We kick-started operations on the 15th of August, 2010 with the goal
-            of breaking all barriers that traders and investors face in India in
-            terms of cost, support, and technology. We named the company
-            Zerodha, a combination of Zero and "Rodha", the Sanskrit word for
-            barrier.
+            Trade Vision is a full-stack stock trading platform built to
+            simulate the real-world experience of stock trading in India.
+            Inspired by platforms like Zerodha, it brings together live market
+            data, portfolio management, and seamless order execution in one
+            place.
           </p>
           <p>
-            Today, our disruptive pricing models and in-house technology have
-            made us the biggest stock broker in India.
+            I built Trade Vision using modern web technologies including
+            React.js for the frontend, Node.js and Express.js for the backend,
+            and MongoDB Atlas for cloud database.
           </p>
           <p>
-            Over 1.6+ crore clients place billions of orders every year through
-            our powerful ecosystem of investment platforms, contributing over
-            15% of all Indian retail trading volumes.
+            Live NSE stock prices are fetched in real-time using Yahoo Finance
+            API, giving users an authentic trading experience with real market
+            data.
           </p>
         </div>
         <div className="col p-5">
           <p>
-            In addition, we run a number of popular open online educational and
-            community initiatives to empower retail traders and investors.
+            The platform supports complete user authentication with JWT tokens,
+            protected routes, and per-user data isolation — every user has their
+            own portfolio, watchlist, holdings, and order history.
           </p>
           <p>
-            <a href="" style={{textDecoration:"none"}}>Rainmatter</a>, our fintech fund and incubator, has invested in several
-            fintech startups with the goal of growing the Indian capital
-            markets.
+            Users can buy and sell stocks, track their portfolio P&L in
+            real-time, manage a personalized watchlist, and view live market
+            analytics for any NSE listed stock.
           </p>
           <p>
-            And yet, we are always up to something new every day. Catch up on
-            the latest updates on our blog or see what the media is saying about
-            us or learn more about our business and product philosophies.
+            ⚠️ Disclaimer: Trade Vision is an educational project built to
+            demonstrate full-stack development skills. It is not intended for
+            real trading or investment purposes.
           </p>
         </div>
       </div>

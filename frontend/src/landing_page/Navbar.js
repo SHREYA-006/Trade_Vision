@@ -9,7 +9,7 @@ function Navbar() {
     >
       <div className="container p-2">
         <Link className="navbar-brand" to={"/"}>
-          <img src="images/logo.svg" alt="logo" style={{ width: "25%" }}></img>
+          <img src="images/logo.png" alt="logo" style={{ width: "25%", objectFit: "contain" }}></img>
         </Link>
 
         <button
@@ -26,7 +26,7 @@ function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           {/* Left side nav links */}
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
             <li className="nav-item">
               <Link className="nav-link" to={"/about"}>About</Link>
             </li>
@@ -36,7 +36,7 @@ function Navbar() {
             <li className="nav-item">
               <Link className="nav-link" to={"/pricing"}>Pricing</Link>
             </li>
-            <li className="nav-item">
+            <li className="nav-item ">
               <Link className="nav-link" to={"/support"}>Support</Link>
             </li>
           </ul>

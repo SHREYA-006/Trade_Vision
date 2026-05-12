@@ -6,9 +6,9 @@ function Footer() {
     <div className="container border-top mt-5 px-5">
       <div className="row mt-5">
         <div className="col">
-            <img src="images/logo.svg" style={{width:"50%"}} className="mb-3"></img>
+            <img src="images/logo.png" style={{width:"50%"}} className="mb-3"></img>
             <p style={{fontSize:"13px"}}>
-                © 2010 - 2026, Zerodha Broking Ltd.<br></br>
+                © 2010 - 2026, Trade Vision Broking Ltd.<br></br>
                 All rights reserved.
             </p>
             <i class="fa-brands fa-twitter" ></i>
@@ -44,8 +44,8 @@ function Footer() {
             <a href="#" className="text-muted">Philosophy</a><br></br>
             <a href="#" className="text-muted">Press & media</a><br></br>
             <a href="#" className="text-muted">Careers</a><br></br>
-            <a href="#" className="text-muted">Zerodha Cares (CSR)</a><br></br>
-            <a href="#" className="text-muted">Zerodha.tech</a><br></br>
+            <a href="#" className="text-muted">Trade Vision Cares (CSR)</a><br></br>
+            <a href="#" className="text-muted">Trade Vision.tech</a><br></br>
             <a href="#" className="text-muted">Open source</a><br></br>
             <a href="#" className="text-muted">Referral program</a><br></br>
         </div>
@@ -63,14 +63,14 @@ function Footer() {
       </div>
       <div className="row mt-5 pb-5">
         <p className="footer-p">
-          Zerodha Broking Ltd.: Member of NSE, BSE, MCX & MSEI – SEBI
+          Trade Vision Broking Ltd.: Member of NSE, BSE, MCX & MSEI – SEBI
           Registration no.: INZ000031633 CDSL/NSDL: Depository services through
-          Zerodha Broking Ltd. – SEBI Registration no.: IN-DP-431-2019
-          Registered Address: Zerodha Broking Ltd., #153/154, 4th Cross, Dollars
+          Trade Vision Broking Ltd. – SEBI Registration no.: IN-DP-431-2019
+          Registered Address: Trade Vision Broking Ltd., #153/154, 4th Cross, Dollars
           Colony, Opp. Clarence Public School, J.P Nagar 4th Phase, Bengaluru -
           560078, Karnataka, India. For any complaints pertaining to securities
-          broking please write to complaints@zerodha.com, for DP related to
-          dp@zerodha.com. Please ensure you carefully read the Risk Disclosure
+          broking please write to complaints@trade vision.com, for DP related to
+          dp@trade vision.com. Please ensure you carefully read the Risk Disclosure
           Document as prescribed by SEBI | ICF
         </p>
         <p className="footer-p">
@@ -111,7 +111,7 @@ function Footer() {
           in case of allotment. In case of non allotment the funds will remain
           in your bank account. As a business we don't give stock tips, and have
           not authorized anyone to trade on behalf of others. If you find anyone
-          claiming to be part of Zerodha and offering such services, please
+          claiming to be part of Trade Vision and offering such services, please
           create a ticket here.
         </p>
         <p className="footer-p">

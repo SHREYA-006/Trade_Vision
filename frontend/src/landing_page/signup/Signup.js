@@ -69,7 +69,7 @@ function Signup() {
       <div className="container mt-5 p-5 border-bottom">
         <div className="row justify-content-center">
           <div className="col-md-6 text-center mb-4">
-            <h1 className="fs-3 mb-3">Open a Zerodha account</h1>
+            <h1 className="fs-3 mb-3">Open a Trade Vision account</h1>
             <p className="text-muted">
               Modern platforms and apps, ₹0 investments, and flat ₹20 intraday
               and F&O trades.

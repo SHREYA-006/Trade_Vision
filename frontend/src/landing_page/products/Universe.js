@@ -8,9 +8,9 @@ function Universe() {
       <div className="row text-center">
         <h3 className="mb-5 mt-5 text-muted fs-5">
           Want to know more about our technology stack? Check out the
-          Zerodha.tech blog.
+          Trade Vision.tech blog.
         </h3>
-        <h3 className="mt-5 mb-3">The Zerodha Universe</h3>
+        <h3 className="mt-5 mb-3">The Trade Vision Universe</h3>
         <p>
           Extend your trading and investment experience even further with our
           partner platforms
