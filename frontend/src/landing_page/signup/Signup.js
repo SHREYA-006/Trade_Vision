@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../Navbar";
-import Footer from "../Footer";
+import Toast from "../Toast";
 
 function Signup() {
+  const [toast, setToast] = useState(null);
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -24,19 +25,46 @@ function Signup() {
         { withCredentials: true },
       );
       if (data.success) {
-        window.location.href = "http://localhost:3001"; // ← redirect to dashboard
+        await axios.post(
+          "http://localhost:3002/auth/logout",
+          {},
+          { withCredentials: true },
+        );
+
+        const loginRes = await axios.post(
+          "http://localhost:3002/auth/login",
+          { email: form.email, password: form.password },
+          { withCredentials: true },
+        );
+
+        if (loginRes.data.success) {
+          setToast({
+            message: "Account created successfully! Redirecting...",
+            type: "success",
+          });
+          setTimeout(() => {
+            window.location.href = "http://localhost:3001"; // ← redirect to dashboard
+          }, 1500);
+        }
       } else {
-        alert(data.message); // shows "User already exists" etc.
+        setToast({ message: data.message, type: "error" }); // shows "User already exists" etc.
       }
     } catch (err) {
       console.log(err);
-      alert("Signup failed");
+      setToast({ message: "Signup failed. Please try again.", type: "error" });
     }
   };
 
   return (
     <>
       <Navbar />
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
       <div className="container mt-5 p-5 border-bottom">
         <div className="row justify-content-center">

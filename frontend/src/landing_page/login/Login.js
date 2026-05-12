@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
+import Toast from "../Toast";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
+  const [toast, setToast] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,19 +20,22 @@ function Login() {
       );
 
       if (data.success) {
-        alert(data.message);
-        window.location.href = "http://localhost:3001"; // dashboard runs here ,redirect to dashboard after login
+        setToast({message:"Login successful! Redirecting...",type: "success" });
+        setTimeout(()=>{
+          window.location.href = "http://localhost:3001";// dashboard runs here ,redirect to dashboard after login
+        },1500);
       } else {
-        alert(data.message);
+        setToast({ message: data.message, type: "error" });
       }
     } catch (err) {
       console.log(err);
-      alert("Login failed");
+      setToast({ message: "Login failed. Please try again.", type: "error" });
     }
   };
 
   return (
     <>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="container mt-5 p-5 border-bottom">
         <div className="row justify-content-center">
           <div className="col-md-6 text-center mb-4">
