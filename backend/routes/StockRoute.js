@@ -20,9 +20,17 @@ router.get("/stockprice/:symbol", (req, res) => {
       response.on("end", () => {
         try {
           const parsed = JSON.parse(data);
-          const price = parsed?.chart?.result?.[0]?.meta?.regularMarketPrice;
-          if (price) {
-            res.json({ price });
+          const meta = parsed?.chart?.result?.[0]?.meta;
+          if (meta) {
+            res.json({
+              price: meta.regularMarketPrice,
+              dayHigh: meta.regularMarketDayHigh,
+              dayLow: meta.regularMarketDayLow,
+              fiftyTwoWeekHigh: meta.fiftyTwoWeekHigh,
+              fiftyTwoWeekLow: meta.fiftyTwoWeekLow,
+              volume: meta.regularMarketVolume,
+              previousClose: meta.previousClose,
+            });
           } else {
             res.status(404).json({ message: "Price not found" });
           }
