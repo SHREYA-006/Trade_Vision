@@ -14,7 +14,7 @@ function Login() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:3002/auth/login",
+        "https://trade-vision-a71w.onrender.com/auth/login",
         form,
         { withCredentials: true }
       );

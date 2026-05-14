@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/auth/verify", { withCredentials: true })
+      .get("https://trade-vision-a71w.onrender.com/auth/verify", { withCredentials: true })
       .then((res) => {
         if (res.data.status) {
           setIsVerified(true);

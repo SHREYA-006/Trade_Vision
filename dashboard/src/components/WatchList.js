@@ -13,7 +13,7 @@ const WatchList = () => {
 
   const fetchWatchlist = async () => {
     try {
-      const res = await axios.get("http://localhost:3002/watchlist", {
+      const res = await axios.get("https://trade-vision-a71w.onrender.com/watchlist", {
         withCredentials: true,
       });
       setWatchlist(res.data);
@@ -29,7 +29,7 @@ const WatchList = () => {
     for (const stock of stocks) {
       try {
         const res = await axios.get(
-          `http://localhost:3002/stockprice/${stock.name}`,
+          `https://trade-vision-a71w.onrender.com/stockprice/${stock.name}`,
           { withCredentials: true },
         );
         if (res.data.price) {
@@ -63,7 +63,7 @@ const WatchList = () => {
     try {
       for (const name of stockNames) {
         await axios.post(
-          "http://localhost:3002/watchlist/add",
+          "https://trade-vision-a71w.onrender.com/watchlist/add",
           { name },
           { withCredentials: true },
         );
@@ -79,7 +79,7 @@ const WatchList = () => {
   };
 
   const handleRemoveStock = async (name) => {
-    await axios.delete(`http://localhost:3002/watchlist/remove/${name}`, {
+    await axios.delete(`https://trade-vision-a71w.onrender.com/watchlist/remove/${name}`, {
       withCredentials: true,
     });
     setLivePrices((prev) => {
@@ -247,7 +247,7 @@ const StockInfoPopup = ({ symbol, onClose }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3002/stockprice/${symbol}`, {
+      .get(`https://trade-vision-a71w.onrender.com/stockprice/${symbol}`, {
         withCredentials: true,
       })
       .then((res) => {

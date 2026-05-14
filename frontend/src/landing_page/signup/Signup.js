@@ -20,19 +20,19 @@ function Signup() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:3002/auth/signup",
+        "https://trade-vision-a71w.onrender.com/auth/signup",
         form,
         { withCredentials: true },
       );
       if (data.success) {
         await axios.post(
-          "http://localhost:3002/auth/logout",
+          "https://trade-vision-a71w.onrender.com/auth/logout",
           {},
           { withCredentials: true },
         );
 
         const loginRes = await axios.post(
-          "http://localhost:3002/auth/login",
+          "https://trade-vision-a71w.onrender.com/auth/login",
           { email: form.email, password: form.password },
           { withCredentials: true },
         );

@@ -9,7 +9,7 @@ const Summary = () => {
   useEffect(() => {
     const fetchSummary = () => {
       axios
-        .get("http://localhost:3002/summary", { withCredentials: true })
+        .get("https://trade-vision-a71w.onrender.com/summary", { withCredentials: true })
         .then((res) => {
           setSummary(res.data);
         });
@@ -23,7 +23,7 @@ const Summary = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/auth/verify", { withCredentials: true })
+      .get("https://trade-vision-a71w.onrender.com/auth/verify", { withCredentials: true })
       .then((res) => {
         if (res.data.status) {
           setUser(res.data.user);

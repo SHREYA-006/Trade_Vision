@@ -7,7 +7,7 @@ const Holdings = () => {
 
   useEffect(() => {
     const fetchHoldings = async () => {
-      const res = await axios.get("http://localhost:3002/allHoldings", {
+      const res = await axios.get("https://trade-vision-a71w.onrender.com/allHoldings", {
         withCredentials: true,
       });
       const holdingsData = res.data;
@@ -22,7 +22,7 @@ const Holdings = () => {
       for (const stock of holdingsData) {
         try {
           const priceRes = await axios.get(
-            `http://localhost:3002/stockprice/${stock.name}`,
+            `https://trade-vision-a71w.onrender.com/stockprice/${stock.name}`,
             { withCredentials: true },
           );
           if (priceRes.data.price) {

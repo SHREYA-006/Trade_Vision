@@ -12,7 +12,7 @@ const Menu = () => {
 
   const handleLogout = async () => {
     await axios.post(
-      "http://localhost:3002/auth/logout",
+      "https://trade-vision-a71w.onrender.com/auth/logout",
       {},
       { withCredentials: true },
     );
@@ -21,7 +21,7 @@ const Menu = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/auth/verify", { withCredentials: true })
+      .get("https://trade-vision-a71w.onrender.com/auth/verify", { withCredentials: true })
       .then((res) => {
         if (res.data.status) {
           setUser(res.data.user);

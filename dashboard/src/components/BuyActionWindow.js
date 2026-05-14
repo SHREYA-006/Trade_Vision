@@ -13,7 +13,7 @@ const BuyActionWindow = ({ uid }) => {
   const handleBuyClick = async () => {
     try {
       await axios.post(
-        "http://localhost:3002/newOrder",
+        "https://trade-vision-a71w.onrender.com/newOrder",
         {
           name: uid,
           qty: Number(stockQuantity), // ← convert string to number

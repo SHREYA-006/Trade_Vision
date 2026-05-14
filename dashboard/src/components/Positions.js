@@ -9,7 +9,7 @@ const Positions = () => {
   useEffect(() => {
     const fetchPositions = () => {
       axios
-        .get("http://localhost:3002/allPositions", { withCredentials: true })
+        .get("https://trade-vision-a71w.onrender.com/allPositions", { withCredentials: true })
         .then((res) => {
           setPositions(res.data);
         });

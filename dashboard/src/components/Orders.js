@@ -8,7 +8,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = () => {
       axios
-        .get("http://localhost:3002/allOrders", { withCredentials: true })
+        .get("https://trade-vision-a71w.onrender.com/allOrders", { withCredentials: true })
         .then((res) => {
           setOrders(res.data);
         });

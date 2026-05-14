@@ -12,8 +12,8 @@ const TopBar = () => {
     const fetchIndices = async () => {
       try {
         const [niftyRes, sensexRes] = await Promise.all([
-          axios.get("http://localhost:3002/stockprice/%5ENSEI"),  // NIFTY 50
-          axios.get("http://localhost:3002/stockprice/%5EBSESN"), // SENSEX
+          axios.get("https://trade-vision-a71w.onrender.com/stockprice/%5ENSEI"),  // NIFTY 50
+          axios.get("https://trade-vision-a71w.onrender.com/stockprice/%5EBSESN"), // SENSEX
         ]);
         setIndices({
           nifty: niftyRes.data.price,
