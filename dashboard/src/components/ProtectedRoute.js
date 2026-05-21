@@ -56,7 +56,7 @@ const ProtectedRoute = ({ children }) => {
           You need to login to access the dashboard
         </p>
         <button
-          onClick={() => window.location.href = "http://localhost:3000/login"}
+          onClick={() => window.location.href = "https://trade-vision-frontend-pied.vercel.app/login"}
           style={{
             marginTop: "8px",
             padding: "10px 28px",

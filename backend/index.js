@@ -18,7 +18,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["https://trade-vision-frontend-pied.vercel.app", "https://trade-vision-dashboard-shreya-yadav-projects.vercel.app"],
     credentials: true,
   }),
 );

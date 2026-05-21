@@ -16,7 +16,7 @@ const Menu = () => {
       {},
       { withCredentials: true },
     );
-    window.location.href = "http://localhost:3000/login";
+    window.location.href = "https://trade-vision-frontend-pied.vercel.app/login";
   };
 
   useEffect(() => {

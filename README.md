@@ -146,7 +146,7 @@ cd frontend
 npm install
 npm start
 ```
-Runs on `http://localhost:3000`
+Runs on `https://trade-vision-frontend-pied.vercel.app`
 
 ### 4. Setup Dashboard
 ```bash
@@ -154,7 +154,7 @@ cd dashboard
 npm install
 npm start
 ```
-Runs on `http://localhost:3001`
+Runs on `https://trade-vision-dashboard-shreya-yadav-projects.vercel.app`
 
 ---
 

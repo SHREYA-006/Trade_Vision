@@ -43,7 +43,7 @@ function Signup() {
             type: "success",
           });
           setTimeout(() => {
-            window.location.href = "http://localhost:3001"; // ← redirect to dashboard
+            window.location.href = "https://trade-vision-dashboard-shreya-yadav-projects.vercel.app"; // ← redirect to dashboard
           }, 1500);
         }
       } else {
