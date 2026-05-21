@@ -2,6 +2,14 @@
 
 A full-stack stock trading platform built with React, Node.js, Express, and MongoDB. Trade Vision allows users to manage their stock portfolio, track live market prices, and simulate buy/sell orders.
 
+## 🌐 Live Demo
+
+| App | URL |
+|-----|-----|
+| 🖥️ Frontend | [trade-vision-frontend-pied.vercel.app](https://trade-vision-frontend-pied.vercel.app) |
+| 📊 Dashboard | [trade-vision-dashboard-shreya-yadav-projects.vercel.app](https://trade-vision-dashboard-shreya-yadav-projects.vercel.app) |
+| ⚙️ Backend | [trade-vision-a71w.onrender.com](https://trade-vision-a71w.onrender.com) |
+
 ---
 
 ## 🚀 Features
@@ -58,7 +66,7 @@ A full-stack stock trading platform built with React, Node.js, Express, and Mong
 
 ```
 ZERODHA_CLONE/
-├── frontend/          # Landing page (port 3000)
+├── frontend/          # Landing page
 │   └── src/
 │       └── landing_page/
 │           ├── Navbar.jsx
@@ -70,7 +78,7 @@ ZERODHA_CLONE/
 │           ├── pricing/
 │           └── support/
 │
-├── dashboard/         # Trading dashboard (port 3001)
+├── dashboard/         # Trading dashboard
 │   └── src/
 │       └── components/
 │           ├── Home.js
@@ -86,7 +94,7 @@ ZERODHA_CLONE/
 │           ├── SellActionWindow.js
 │           └── ProtectedRoute.js
 │
-└── backend/           # REST API (port 3002)
+└── backend/           # REST API
     ├── index.js
     ├── model/
     │   ├── UserModel.js
@@ -137,7 +145,7 @@ PORT=3002
 
 Start the backend:
 ```bash
-nodemon index.js
+npm run dev
 ```
 
 ### 3. Setup Frontend
@@ -146,7 +154,7 @@ cd frontend
 npm install
 npm start
 ```
-Runs on `https://trade-vision-frontend-pied.vercel.app`
+Runs on `http://localhost:3000`
 
 ### 4. Setup Dashboard
 ```bash
@@ -154,7 +162,7 @@ cd dashboard
 npm install
 npm start
 ```
-Runs on `https://trade-vision-dashboard-shreya-yadav-projects.vercel.app`
+Runs on `http://localhost:3001`
 
 ---
 
@@ -172,10 +180,10 @@ Create a `.env` file in the `backend` directory:
 
 ## 📱 How It Works
 
-1. User visits the landing page at `localhost:3000`
-2. Signs up or logs in — JWT token stored in cookie
-3. Automatically redirected to dashboard at `localhost:3001`
-4. Dashboard is protected — unauthenticated users see Access Denied
+1. User visits the landing page
+2. Signs up or logs in — JWT token stored in HTTP-only cookie
+3. Automatically redirected to dashboard
+4. Dashboard is protected — unauthenticated users see Access Denied screen
 5. Live stock prices fetched from Yahoo Finance via backend proxy
 6. User can add stocks to watchlist, buy/sell stocks
 7. Holdings and P&L update in real-time after every order
@@ -210,6 +218,7 @@ Create a `.env` file in the `backend` directory:
 - **Backend Proxy** — Yahoo Finance API called from backend to avoid CORS issues
 - **Cookie Auth** — JWT stored in HTTP-only cookie for security
 - **Real P&L** — P&L calculated using live market price vs average buy price
+- **Middleware Auth** — `userVerification` middleware protects all private routes
 
 ---
 
