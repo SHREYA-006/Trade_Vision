@@ -18,12 +18,17 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://trade-vision-frontend-pied.vercel.app", "https://trade-vision-dashboard-shreya-yadav-projects.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://trade-vision-frontend-pied.vercel.app",
+      "https://trade-vision-dashboard-shreya-yadav-projects.vercel.app",
+    ],
     credentials: true,
   }),
 );
 
-app.use(express.json()); 
+app.use(express.json());
 app.use(cookieParser());
 
 app.use("/auth", AuthRoute);
@@ -37,7 +42,7 @@ app.post("/auth/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     sameSite: "none",
-    secure: false,
+    secure: true,
   });
   res.json({ message: "Logged out successfully" });
 });

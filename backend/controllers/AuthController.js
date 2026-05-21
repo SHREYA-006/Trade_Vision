@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const { UserModel } = require("../model/UserModel");
 const { createSecretToken } = require("../utils/SecretToken");
 
-// 👇 THIS IS WHERE YOUR CODE GOES
 const Signup = async (req, res) => {
   try {
     const { email, password, username } = req.body;
@@ -19,7 +18,7 @@ const Signup = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
-      secure: false,
+      secure: true,
     });
 
     res.status(201).json({
@@ -33,7 +32,6 @@ const Signup = async (req, res) => {
   }
 };
 
-// 👇 EXPORT
 module.exports = { Signup };
 
 module.exports.Login = async (req, res) => {
@@ -58,15 +56,15 @@ module.exports.Login = async (req, res) => {
     const token = createSecretToken(user._id);
 
     res.cookie("token", token, {
-      httpOnly: true,   // 🔥 FIX (important)
-      sameSite: "lax",
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
     });
 
     return res.status(200).json({
       message: "User logged in successfully",
       success: true,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
