@@ -3,13 +3,18 @@ import axios from "axios";
 
 // import { positions } from "../data/data";
 
+const getAuthHeader=()=>{
+  const token = localStorage.getItem("token");
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
+
 const Positions = () => {
   const [positions, setPositions] = useState([]);
 
   useEffect(() => {
     const fetchPositions = () => {
       axios
-        .get("https://trade-vision-a71w.onrender.com/allPositions", { withCredentials: true })
+        .get("https://trade-vision-a71w.onrender.com/allPositions", getAuthHeader())
         .then((res) => {
           setPositions(res.data);
         });

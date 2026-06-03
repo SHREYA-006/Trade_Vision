@@ -2,32 +2,46 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+//Helper to get Authorization header from localStorage token
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
+
 const Menu = () => {
   const [selectedMenu, setSelectedMenu] = useState(0);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-
   const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await axios.post(
-      "https://trade-vision-a71w.onrender.com/auth/logout",
-      {},
-      { withCredentials: true },
-    );
-    window.location.href = "https://trade-vision-frontend-pied.vercel.app/login";
+    localStorage.removeItem("token");
+    try {
+      await axios.post(
+        "https://trade-vision-a71w.onrender.com/auth/logout",
+        {},
+        getAuthHeader(),
+      );
+    } catch (err) {
+      // ignore logout errors, just redirect
+    }
+    window.location.href =
+      "https://trade-vision-frontend-pied.vercel.app/login";
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     axios
-      .get("https://trade-vision-a71w.onrender.com/auth/verify", { withCredentials: true })
+      .get(
+        "https://trade-vision-a71w.onrender.com/auth/verify",
+        getAuthHeader(),
+      )
       .then((res) => {
-        if (res.data.status) {
+        if(res.data.status) {
           setUser(res.data.user);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err)=>console.log(err));
   }, []);
 
   const handleMenuClick = (index) => {

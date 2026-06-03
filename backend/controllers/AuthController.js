@@ -25,6 +25,7 @@ const Signup = async (req, res) => {
       message: "User signed in successfully",
       success: true,
       user,
+      token: token,
     });
   } catch (error) {
     console.error(error);
@@ -64,6 +65,7 @@ module.exports.Login = async (req, res) => {
     return res.status(200).json({
       message: "User logged in successfully",
       success: true,
+      token: token,
     });
   } catch (error) {
     console.error(error);

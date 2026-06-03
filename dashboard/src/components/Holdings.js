@@ -2,14 +2,21 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { VerticalGraph } from "./VerticalGraph";
 
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
+
 const Holdings = () => {
   const [holdings, setHoldings] = useState([]);
 
   useEffect(() => {
     const fetchHoldings = async () => {
-      const res = await axios.get("https://trade-vision-a71w.onrender.com/allHoldings", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        "https://trade-vision-a71w.onrender.com/allHoldings",
+        getAuthHeader(),
+      );
+
       const holdingsData = res.data;
 
       if (holdingsData.length === 0) {
@@ -23,7 +30,7 @@ const Holdings = () => {
         try {
           const priceRes = await axios.get(
             `https://trade-vision-a71w.onrender.com/stockprice/${stock.name}`,
-            { withCredentials: true },
+            getAuthHeader(),
           );
           if (priceRes.data.price) {
             prices[stock.name] = priceRes.data.price;

@@ -5,6 +5,11 @@ import { BarChartOutlined, MoreHoriz } from "@mui/icons-material";
 import GeneralContext from "./GeneralContext";
 import { DoughnutChart } from "./DoughnutChart";
 
+const getAuthHeader=()=>{
+  const token = localStorage.getItem("token");
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
+
 const WatchList = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [search, setSearch] = useState("");
@@ -13,9 +18,7 @@ const WatchList = () => {
 
   const fetchWatchlist = async () => {
     try {
-      const res = await axios.get("https://trade-vision-a71w.onrender.com/watchlist", {
-        withCredentials: true,
-      });
+      const res = await axios.get("https://trade-vision-a71w.onrender.com/watchlist", getAuthHeader());
       setWatchlist(res.data);
       return res.data;
     } catch (err) {
@@ -30,7 +33,7 @@ const WatchList = () => {
       try {
         const res = await axios.get(
           `https://trade-vision-a71w.onrender.com/stockprice/${stock.name}`,
-          { withCredentials: true },
+          getAuthHeader(),
         );
         if (res.data.price) {
           setLivePrices((prev) => ({ ...prev, [stock.name]: res.data.price }));
@@ -65,7 +68,7 @@ const WatchList = () => {
         await axios.post(
           "https://trade-vision-a71w.onrender.com/watchlist/add",
           { name },
-          { withCredentials: true },
+          getAuthHeader(),
         );
       }
       setSearch("");
@@ -79,9 +82,7 @@ const WatchList = () => {
   };
 
   const handleRemoveStock = async (name) => {
-    await axios.delete(`https://trade-vision-a71w.onrender.com/watchlist/remove/${name}`, {
-      withCredentials: true,
-    });
+    await axios.delete(`https://trade-vision-a71w.onrender.com/watchlist/remove/${name}`,getAuthHeader());
     setLivePrices((prev) => {
       const updated = { ...prev };
       delete updated[name];
@@ -247,9 +248,7 @@ const StockInfoPopup = ({ symbol, onClose }) => {
 
   useEffect(() => {
     axios
-      .get(`https://trade-vision-a71w.onrender.com/stockprice/${symbol}`, {
-        withCredentials: true,
-      })
+      .get(`https://trade-vision-a71w.onrender.com/stockprice/${symbol}`,getAuthHeader())
       .then((res) => {
         setInfo(res.data);
         setLoading(false);

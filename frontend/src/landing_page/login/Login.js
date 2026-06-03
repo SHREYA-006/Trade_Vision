@@ -22,7 +22,7 @@ function Login() {
       if (data.success) {
         setToast({message:"Login successful! Redirecting...",type: "success" });
         setTimeout(()=>{
-          window.location.href = "https://trade-vision-dashboard-shreya-yadav-projects.vercel.app";// dashboard runs here ,redirect to dashboard after login
+          window.location.href = `https://trade-vision-dashboard-shreya-yadav-projects.vercel.app?token=${data.token}`;// dashboard runs here ,redirect to dashboard after login
         },1500);
       } else {
         setToast({ message: data.message, type: "error" });

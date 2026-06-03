@@ -1,6 +1,11 @@
-// dashboard/src/components/Orders.js
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -8,7 +13,10 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = () => {
       axios
-        .get("https://trade-vision-a71w.onrender.com/allOrders", { withCredentials: true })
+        .get(
+          "https://trade-vision-a71w.onrender.com/allOrders",
+          getAuthHeader(),
+        )
         .then((res) => {
           setOrders(res.data);
         });

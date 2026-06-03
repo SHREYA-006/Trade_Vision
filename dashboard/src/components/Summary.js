@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const getAuthHeader=()=>{
+  const token = localStorage.getItem("token");
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
+
 const Summary = () => {
   const [summary, setSummary] = useState(null);
   const [user, setUser] = useState(null);
@@ -9,21 +14,21 @@ const Summary = () => {
   useEffect(() => {
     const fetchSummary = () => {
       axios
-        .get("https://trade-vision-a71w.onrender.com/summary", { withCredentials: true })
+        .get("https://trade-vision-a71w.onrender.com/summary", getAuthHeader())
         .then((res) => {
           setSummary(res.data);
         });
     };
 
-    fetchSummary(); // fetch on mount
+    fetchSummary(); //fetch on mount
 
-    window.addEventListener("orderPlaced", fetchSummary); // ← re-fetch on order
-    return () => window.removeEventListener("orderPlaced", fetchSummary); // cleanup
+    window.addEventListener("orderPlaced", fetchSummary); //re-fetch on order
+    return () => window.removeEventListener("orderPlaced", fetchSummary); //cleanup
   }, []);
 
   useEffect(() => {
     axios
-      .get("https://trade-vision-a71w.onrender.com/auth/verify", { withCredentials: true })
+      .get("https://trade-vision-a71w.onrender.com/auth/verify", getAuthHeader(),)
       .then((res) => {
         if (res.data.status) {
           setUser(res.data.user);
